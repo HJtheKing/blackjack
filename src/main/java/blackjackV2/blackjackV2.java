@@ -25,7 +25,7 @@ public class blackjackV2 {
             v2.myCards.clear();
             v2.dealerCards.clear();
             System.out.println("현재 재산: " + v2.money);
-            v2.betting = v2.yesOrNo(inputType.BET);
+            v2.betting = v2.msgAndInput(inputType.BET);
             System.out.println("\nGAME " + v2.game++);
             do {v2.selectCard(v2.myCards);
                 v2.printCards("플레이어", v2.myCards);
@@ -35,12 +35,12 @@ public class blackjackV2 {
                     v2.record[2]++;
                     break;}
                 if (v2.getSum(v2.dealerCards) <= 16) v2.selectCard(v2.dealerCards);
-            } while (v2.yesOrNo(inputType.CARD) == 1);
+            } while (v2.msgAndInput(inputType.CARD) == 1);
             if (mySum <= 21) {
                 v2.printCards("딜러", v2.dealerCards);
                 System.out.println("딜러의 카드 합계는 " + (dealerSum = v2.getSum(v2.dealerCards)) + "입니다.");
                 v2.winDrawLose(mySum, dealerSum);}
-        } while ((v2.money > 0) && (v2.yesOrNo(inputType.GAME) == 1));
+        } while ((v2.money > 0) && (v2.msgAndInput(inputType.GAME) == 1));
     }
 
     private List<Integer> createDeck() {
@@ -79,7 +79,7 @@ public class blackjackV2 {
         return sum;
     }
 
-    public int yesOrNo(inputType type) throws Exception{
+    public int msgAndInput(inputType type) throws Exception{
         Scanner sc = new Scanner(System.in);
         Map<String, Integer> typeMap = new HashMap<>();
         typeMap.put("y", 1);
@@ -115,10 +115,10 @@ public class blackjackV2 {
 
     private void winDrawLose(int mySum, int dealerSum) {
         int diff = mySum - dealerSum;
-        HashMap<Integer, msgAndPrice> map = new HashMap<>();
-        map.put(0, new msgAndPrice("승리", mySum == 21 ? betting * 2 : betting));
-        map.put(1, new msgAndPrice("비김", 0));
-        map.put(2, new msgAndPrice("패배", betting * -1));
+        HashMap<Integer, wdlMsgAndPrice> map = new HashMap<>();
+        map.put(0, new wdlMsgAndPrice("당신의 승리입니다.", mySum == 21 ? betting * 2 : betting));
+        map.put(1, new wdlMsgAndPrice("비겼습니다.", 0));
+        map.put(2, new wdlMsgAndPrice("당신의 패배입니다.", betting * -1));
 
         int i = (mySum == 21 || dealerSum > 21 || diff > 0) ? 0 : (diff == 0 ? 1 : 2);
         record[i]++;
@@ -128,11 +128,11 @@ public class blackjackV2 {
     }
 }
 
-class msgAndPrice {
+class wdlMsgAndPrice {
     String str;
     int i;
 
-    public msgAndPrice(String str, int i) {
+    public wdlMsgAndPrice(String str, int i) {
         this.str = str;
         this.i = i;
     }
